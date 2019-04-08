@@ -9,12 +9,12 @@ package com.cebedo.hackerrank.linkedlists;
  *
  * @author Vic Cebedo <cebedo.vii@gmail.com>
  */
-public class SinglyLinkedListNode {
+public class PrintElements {
 
-    int data;
-    SinglyLinkedListNode next;
-
-    public SinglyLinkedListNode(int d) {
-        this.data = d;
+    static void printLinkedList(SinglyLinkedListNode head) {
+        while (head != null) {
+            System.out.println(head.data);
+            head = head.next;
+        }
     }
 }
