@@ -11,31 +11,35 @@ package com.cebedo.hackerrank.datastruct.linkedlists;
  */
 public class InsertNodeAtPosition {
 
-    static SinglyLinkedListNode insertNodeAtPosition(SinglyLinkedListNode current, int data, int position) {
+    /*
+     * For your reference:
+     *
+     * SinglyLinkedListNode {
+     *     int data;
+     *     SinglyLinkedListNode next;
+     * }
+     *
+     */
+    static SinglyLinkedListNode insertNodeAtPosition(SinglyLinkedListNode head, int data, int position) {
+        int index = 0;
+        SinglyLinkedListNode previous = null;
+        SinglyLinkedListNode dataToInsert = new SinglyLinkedListNode(data);
+        SinglyLinkedListNode current = head;
 
-        // If null, just return the node.
-        SinglyLinkedListNode middleNode = new SinglyLinkedListNode(data);
-        if (current == null) {
-            return middleNode;
-        }
-
-        int currentIndex = 0;
-        SinglyLinkedListNode newStart = null;
-
-        // Traverse through the entire list.
         while (current != null) {
 
-            // If we have found the desired position.
-            if (currentIndex == position) {
-                newStart = middleNode;
-                newStart.next = current;
+            if (index == position) {
+                previous.next = dataToInsert;
+                dataToInsert.next = current;
                 break;
             }
-            newStart = new SinglyLinkedListNode(current.data);
-            newStart.next = new SinglyLinkedListNode(current.next.data);
+
+            // Proceed to next.
+            index++;
+            previous = current;
             current = current.next;
-            currentIndex++;
         }
-        return newStart;
+
+        return head;
     }
 }
