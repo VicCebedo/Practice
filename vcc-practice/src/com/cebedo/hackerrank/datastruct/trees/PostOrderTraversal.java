@@ -1,13 +1,29 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2019 Vic Cebedo <cebedo.vii@gmail.com>.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package com.cebedo.hackerrank.datastruct.trees;
 
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -16,70 +32,77 @@ import java.util.Stack;
  */
 public class PostOrderTraversal {
 
-    private static StringBuilder sb = new StringBuilder();
-    private static Stack<Node> stack = new Stack<>();
-    private static Set<Node> visited = new HashSet<>();
-    private static int nodeCount = 0;
+    private static final StringBuilder VISITED = new StringBuilder();
+    private static final Stack<Node> TO_VISIT = new Stack<>();
 
-    public static void postOrder(Node root) {
+    private static void postOrder(Node root) {
+        if (root == null) {
+            return;
+        }
+        TO_VISIT.push(root);
         doPostOrder(root);
-        System.out.print(sb.toString());
     }
 
-    static void doPostOrder(Node root) {
+    private static void doPostOrder(Node root) {
+        // Do loop while we have not yet reached a deadend on the left side.
+        // Add to stack along the way.
+        while (!TO_VISIT.isEmpty()) {
+            if (root.left == null && root.right == null) {
 
-        nodeCount++;
-        if (!(nodeCount > 500 || root == null)) {
-
-            // If we have already visited the left and the right,
-            // OR If we have reached a deadend.        
-            // visit this node,
-            // then pop from stack.
-            if ((visited.contains(root.left) && visited.contains(root.right))
-                    || (root.left == null && root.right == null)) {
-                visitNode(root);
-                if (!stack.isEmpty()) {
-                    doPostOrder(stack.pop());
-                }
+                // Visit now, proceed to next in stack.
+                visitNow(root);
+                doPostOrder(TO_VISIT.pop());
+                return;
             } else {
-                // If we can go left or maybe we can go right,
-                // push root to stack,
-                // push right to stack,
-                // go to left.
-                if (root.left != null) {
-                    if (!visited.contains(root)) {
-                        stack.push(root);
-                    }
 
-                    // If we can go right, we go right later.
-                    if (root.right != null && !visited.contains(root.right)) {
-                        stack.push(root.right);
-                    }
+                // If two children are already visited,
+                // pop from stack.
+                if (childrenVisited(root)) {
+                    visitNow(root);
 
-                    // If we have already visited the left,
-                    if (visited.contains(root.left)) {
-                        doPostOrder(stack.pop());
-                    } else {
+                    if (TO_VISIT.peek().data == root.data
+                            && TO_VISIT.size() == 1) {
+                        break;
+                    }
+                    doPostOrder(TO_VISIT.pop());
+                    return;
+                } else {
+
+                    // If left is null, right is not.
+                    if (root.left == null && root.right != null) {
+                        visitLater(root);
+                        doPostOrder(root.right);
+                        return;
+                    } else if (root.left != null && root.right == null) {
+                        // If right is null, left is not.
+                        visitLater(root);
                         doPostOrder(root.left);
+                        return;
+                    } else {
+                        // If both children are present.
+                        visitLater(root);
+                        visitLater(root.right);
+                        doPostOrder(root.left);
+                        return;
                     }
-                } else if (root.right != null) {
-
-                    // If we cannot go left,
-                    // but we can go right,
-                    // push root to stack, then visit right.
-                    visited.add(root.left);
-                    if (!visited.contains(root)) {
-                        stack.push(root);
-                    }
-                    doPostOrder(root.right);
                 }
             }
         }
+        System.out.print(VISITED.toString());
     }
 
-    static void visitNode(Node node) {
-        sb.append(node.data).append(" ");
-        visited.add(node);
+    private static boolean childrenVisited(Node node) {
+        return (node.left == null || VISITED.indexOf(node.left.data + " ") > -1)
+                && (node.right == null || VISITED.indexOf(node.right.data + " ") > -1);
+    }
+
+    private static void visitLater(Node node) {
+        TO_VISIT.push(node);
+    }
+
+    private static void visitNow(Node node) {
+        VISITED.append(node.data);
+        VISITED.append(" ");
     }
 
     public static Node insert(Node root, int data) {
@@ -109,4 +132,5 @@ public class PostOrderTraversal {
         scan.close();
         postOrder(root);
     }
+
 }
