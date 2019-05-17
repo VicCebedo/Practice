@@ -18,4 +18,10 @@ public class Node {
     public Node(int d) {
         this.data = d;
     }
+
+    @Override
+    public String toString() {
+        return "Node{" + "data=" + data + '}';
+    }
+
 }
