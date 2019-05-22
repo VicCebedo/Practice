@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.cebedo.hackerrank.diligence;
+package com.cebedo.hackerrank.diligence.warmup;
 
 import java.io.IOException;
 import java.util.Scanner;
