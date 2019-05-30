@@ -21,34 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.cebedo.hackerrank.datastruct.hashmap;
+package com.cebedo.hackerrank.preparation.hashmap;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.util.Scanner;
 
 /**
  *
  * @author Vic Cebedo <cebedo.vii@gmail.com>
  */
-public class CheckMagazine {
+public class TwoStrings {
 
-    static void checkMagazine(String[] magazine, String[] note) {
-
-        final Map<String, Integer> countMap = new HashMap<>();
-        for (String word : magazine) {
-            Integer count = countMap.get(word);
-            countMap.put(word, count == null ? 1 : count + 1);
+    static String twoStrings(String s1, String s2) {
+        final int[] letterCount = new int[26];
+        for (char c : s1.toUpperCase().toCharArray()) {
+            letterCount[c - 65]++;
         }
-
-        for (String word : note) {
-            Integer count = countMap.get(word);
-            if (count == null || count == 0) {
-                System.out.println("No");
-                return;
+        for (char c : s2.toUpperCase().toCharArray()) {
+            if (letterCount[c - 65] > 0) {
+                return "YES";
             }
-            countMap.put(word, count - 1);
         }
-        System.out.println("Yes");
+        return "NO";
+    }
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) throws IOException {
+        int q = scanner.nextInt();
+        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+        for (int qItr = 0; qItr < q; qItr++) {
+            String s1 = scanner.nextLine();
+            String s2 = scanner.nextLine();
+            String result = twoStrings(s1, s2);
+        }
+        scanner.close();
     }
 
 }
