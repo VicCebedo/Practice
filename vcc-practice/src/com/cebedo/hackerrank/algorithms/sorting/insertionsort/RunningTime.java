@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.cebedo.hackerrank.algorithms.sorting;
+package com.cebedo.hackerrank.algorithms.sorting.insertionsort;
 
 import java.util.Scanner;
 
@@ -29,27 +29,23 @@ import java.util.Scanner;
  *
  * @author Vic Cebedo <cebedo.vii@gmail.com>
  */
-public class LoopInvariant {
+public class RunningTime {
 
-    public static void insertionSort(int[] A) {
-        for (int i = 0; i < A.length; i++) {
-            int currentValue = A[i];
+    static int runningTime(int[] arr) {
+        int shifts = 0;
+
+        for (int i = 0; i < arr.length; i++) {
+            int currentValue = arr[i];
             int previousIndex = i - 1;
 
-            while (previousIndex >= 0 && A[previousIndex] > currentValue) {
-                A[previousIndex + 1] = A[previousIndex];
+            while (previousIndex >= 0 && arr[previousIndex] > currentValue) {
+                arr[previousIndex + 1] = arr[previousIndex];
+                arr[previousIndex] = currentValue;
                 previousIndex--;
+                shifts++;
             }
-            A[previousIndex + 1] = currentValue;
         }
-
-        printArray(A);
-    }
-
-    static void printArray(int[] ar) {
-        for (int n : ar) {
-            System.out.print(n + " ");
-        }
+        return shifts;
     }
 
     public static void main(String[] args) {
@@ -59,6 +55,7 @@ public class LoopInvariant {
         for (int i = 0; i < n; i++) {
             ar[i] = in.nextInt();
         }
-        insertionSort(ar);
+        runningTime(ar);
     }
+
 }

@@ -21,68 +21,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.cebedo.hackerrank.algorithms.sorting;
+package com.cebedo.hackerrank.algorithms.sorting.quicksort;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
  *
  * @author Vic Cebedo <cebedo.vii@gmail.com>
  */
-public class InsertionSort2 {
+public class NonOptimizedPartitioning {
 
-    static void insertionSort2(int n, int[] arr) {
-        while (!isSorted(arr)) {
-            for (int i = 0; i < arr.length; i++) {
-                if (i - 1 >= 0) {
-                    int current = arr[i];
-                    int previous = arr[i - 1];
-                    if (current < previous) {
-                        shiftAndInsert(i, arr, current);
-                    }
-                    print(arr);
-                }
-            }
-        }
-    }
+    static int[] quickSort(int[] arr) {
 
-    private static boolean isSorted(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            if (i + 1 < arr.length && arr[i] > arr[i + 1]) {
-                return false;
-            }
-        }
-        return true;
-    }
+        int pivot = arr[0];
 
-    private static void shiftAndInsert(int index, int[] arr, int toInsert) {
-        boolean inserted = false;
-        while (index - 1 >= 0) {
-            int previous = arr[index - 1];
-            if (previous < toInsert) {
-                arr[index] = toInsert;
-                inserted = true;
-                break;
+        List<Integer> lessThan = new ArrayList<>();
+        List<Integer> greaterThan = new ArrayList<>();
+        int equalCount = 0;
+
+        for (int num : arr) {
+            if (num == pivot) {
+                equalCount++;
+            } else if (num < pivot) {
+                lessThan.add(num);
             } else {
-                arr[index] = previous;
+                greaterThan.add(num);
             }
-            index--;
         }
 
-        if (!inserted) {
-            arr[0] = toInsert;
+        int arrIndex = 0;
+        for (int lesserNum : lessThan) {
+            arr[arrIndex] = lesserNum;
+            arrIndex++;
         }
-    }
 
-    private static void print(int[] arr) {
-        String[] str = Arrays.stream(arr).mapToObj(String::valueOf).toArray(String[]::new);
-        System.out.println(String.join(" ", str));
+        for (int i = 0; i < equalCount; i++) {
+            arr[arrIndex] = pivot;
+            arrIndex++;
+        }
+
+        for (int greaterNum : greaterThan) {
+            arr[arrIndex] = greaterNum;
+            arrIndex++;
+        }
+
+        return arr;
     }
 
     private static final Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         int n = scanner.nextInt();
         scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
         int[] arr = new int[n];
@@ -92,7 +83,8 @@ public class InsertionSort2 {
             int arrItem = Integer.parseInt(arrItems[i]);
             arr[i] = arrItem;
         }
-        insertionSort2(n, arr);
+        int[] result = quickSort(arr);
         scanner.close();
     }
+
 }

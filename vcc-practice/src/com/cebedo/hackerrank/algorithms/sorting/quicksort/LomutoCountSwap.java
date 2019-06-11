@@ -21,57 +21,74 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.cebedo.hackerrank.algorithms.sorting;
+package com.cebedo.hackerrank.algorithms.sorting.quicksort;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
  *
  * @author Vic Cebedo <cebedo.vii@gmail.com>
  */
-public class QuickSortSorting {
+public class LomutoCountSwap {
 
-    private static List<Integer> quickSort(int[] arr) {
-        int pivot = arr[0];
-        List<Integer> lessThan = new ArrayList<>();
-        List<Integer> greaterThan = new ArrayList<>();
+    private static int SWAP_COUNT = 0;
 
-        // Do partitioning.
-        for (int num : arr) {
-            if (num < pivot) {
-                lessThan.add(num);
-            } else if (num > pivot) {
-                greaterThan.add(num);
+    private static int[] quickSort(int[] arr) {
+        // Initial partition.
+        int j = 0;
+        int i = j - 1;
+        int pivot = arr[arr.length - 1];
+
+        while (j < arr.length) {
+            int currentValue = arr[j];
+            if (currentValue < pivot) {
+                i++;
+                arr[j] = arr[i];
+                arr[i] = currentValue;
+                SWAP_COUNT++;
             }
+            j++;
+        }
+        i++;
+        arr[arr.length - 1] = arr[i];
+        arr[i] = pivot;
+        SWAP_COUNT++;
+
+        // Deeper partitions.
+        int[] lesser = Arrays.copyOfRange(arr, 0, i);
+        if (lesser.length > 1) {
+            lesser = quickSort(lesser);
         }
 
-        if (lessThan.size() > 1) {
-            lessThan = partition(lessThan);
-        }
-        if (greaterThan.size() > 1) {
-            greaterThan = partition(greaterThan);
+        int[] greater = Arrays.copyOfRange(arr, i + 1, arr.length);
+        if (greater.length > 1) {
+            greater = quickSort(greater);
         }
 
-        return merge(pivot, lessThan, greaterThan);
+        // Merge.
+        return merge(arr.length, pivot, lesser, greater);
     }
 
-    private static List<Integer> partition(List<Integer> arr) {
-        return quickSort(arr.stream().mapToInt(i -> i).toArray());
-    }
+    private static int[] merge(int len, int pivot, int[] lesser, int[] greater) {
+        int[] arr = new int[len];
 
-    private static List<Integer> merge(int pivot, List<Integer> lessThan, List<Integer> greaterThan) {
-        List<Integer> merged = new ArrayList<>();
-        merged.addAll(lessThan);
-        merged.add(pivot);
-        merged.addAll(greaterThan);
-        for (int num : merged) {
-            System.out.print(num + " ");
+        int i = 0;
+        while (i < lesser.length) {
+            arr[i] = lesser[i];
+            i++;
         }
-        System.out.println();
-        return merged;
+        arr[i] = pivot;
+        i++;
+
+        int j = 0;
+        while (j < greater.length) {
+            arr[i] = greater[j];
+            j++;
+            i++;
+        }
+        return arr;
     }
 
     private static final Scanner scanner = new Scanner(System.in);
@@ -86,7 +103,8 @@ public class QuickSortSorting {
             int arrItem = Integer.parseInt(arrItems[i]);
             arr[i] = arrItem;
         }
-        quickSort(arr);
+        arr = quickSort(arr);
         scanner.close();
     }
+
 }
