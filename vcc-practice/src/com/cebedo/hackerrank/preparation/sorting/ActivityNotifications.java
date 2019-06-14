@@ -32,9 +32,6 @@ import java.util.Scanner;
  */
 public class ActivityNotifications {
 
-    private static final int MAX_AMOUNT = 200;
-    private static boolean FIRST_RUN = true;
-
     static int activityNotifications(int[] expenditure, int d) {
         int[] data = new int[d];
         int dataIndex = 0;
@@ -52,6 +49,7 @@ public class ActivityNotifications {
                 i++;
                 continue;
             }
+            insertionSort(data);
 
             // If we have enough data,
             // compute the median.
@@ -78,12 +76,6 @@ public class ActivityNotifications {
     }
 
     private static double computeMedian(int[] data) {
-        if (FIRST_RUN) {
-            data = countingSort(data);
-            FIRST_RUN = false;
-        } else {
-            insertionSort(data);
-        }
         boolean isEven = (data.length % 2) == 0;
         if (isEven) {
             int j = data.length / 2;
@@ -122,57 +114,6 @@ public class ActivityNotifications {
         if (!inserted) {
             arr[0] = toInsert;
         }
-    }
-
-    static int[] countingSort(int[] arr) {
-        // Count.
-        int[] count = count(arr);
-
-        // Increment.
-        increment(count);
-
-        // Shift.
-        shift(count);
-
-        // Sort.
-        int[] sorted = new int[arr.length];
-        for (int num : arr) {
-            int index = count[num];
-            count[num]++;
-            sorted[index] = num;
-        }
-        return sorted;
-    }
-
-    private static void shift(int[] count) {
-        int current = count.length - 1;
-        int previous = current - 1;
-
-        while (previous >= 0) {
-            count[current] = count[previous];
-            current--;
-            previous--;
-        }
-        count[0] = 0;
-    }
-
-    private static void increment(int[] count) {
-        int current = 0;
-        int ahead = current + 1;
-
-        while (ahead < count.length) {
-            count[ahead] = count[ahead] + count[current];
-            current++;
-            ahead++;
-        }
-    }
-
-    private static int[] count(int[] arr) {
-        int[] count = new int[MAX_AMOUNT];
-        for (int num : arr) {
-            count[num]++;
-        }
-        return count;
     }
 
     private static final Scanner scanner = new Scanner(System.in);
